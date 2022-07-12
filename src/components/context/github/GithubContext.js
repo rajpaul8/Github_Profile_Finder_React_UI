@@ -13,21 +13,34 @@ export const GithubProvider = ({ children }) => {
   const [state, dispatch] = useReducer(githubReducer, initialState);
 
   //Fetch users from github api
-  const fetchUsers = async () => {
+  const searchUsers = async (text) => {
     setLoading();
-    const response = await fetch(`${process.env.REACT_APP_GITHUB_URL}/users`);
-    const data = await response.json();
+    const params = new URLSearchParams({
+      q: text,
+    });
+    const response = await fetch(
+      `${process.env.REACT_APP_GITHUB_URL}/search/users?${params}`
+    );
+    const { items } = await response.json();
     // dispatch action to useReducer for fetching data
-    dispatch({ type: "GET_USERS", payload: data });
+    dispatch({ type: "GET_USERS", payload: items });
   };
-
-  //Set Loading 
+  // Clear users from the state
+  const clearUsers = () => {
+    dispatch({ type: "CLEAR_USERS", payload: [] });
+  };
+  //Set Loading
   const setLoading = () => {
     dispatch({ type: "SET_LOADING" });
   };
   return (
     <GithubContext.Provider
-      value={{ users: state.users, isLoading: state.loading, fetchUsers }}
+      value={{
+        users: state.users,
+        isLoading: state.loading,
+        searchUsers,
+        clearUsers,
+      }}
     >
       {children}
     </GithubContext.Provider>
