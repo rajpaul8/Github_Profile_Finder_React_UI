@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react";
+import { createRoutesFromChildren } from "react-router-dom";
 import githubReducer from "./GithubReducer";
 
 const GithubContext = createContext();
@@ -10,7 +11,7 @@ export const GithubProvider = ({ children }) => {
   // const [users, setUsers] = useState([]);
   // const [isLoading, setIsLoading] = useState(true);
 
-  const initialState = { users: [], user: {}, isLoading: false };
+  const initialState = { users: [], user: {}, repos: [], isLoading: false };
 
   const [state, dispatch] = useReducer(githubReducer, initialState);
 
@@ -49,8 +50,30 @@ export const GithubProvider = ({ children }) => {
       window.location = "./notfound";
     } else {
       const data = await response.json();
-      console.log("passed:", data);
       dispatch({ type: "GET_USER", payload: data });
+    }
+  };
+
+  // Get User Repositories
+  // Sort and get top 10 only
+  const params = new URLSearchParams({
+    sort: "created",
+    per_page: 10,
+  });
+
+  const getUserRepository = async (login) => {
+    const response = await fetch(
+      `${GITHUB_URL}/users/${login}/repos?${params}`,
+      {
+        headers: { Authorization: `token ${GITHUB_TOKEN}` },
+      }
+    );
+
+    if (response.status === 404) {
+      window.location = "./notfound";
+    } else {
+      const data = await response.json();
+      dispatch({ type: "GET_USER_REPOSITORY", payload: data });
     }
   };
 
@@ -63,6 +86,8 @@ export const GithubProvider = ({ children }) => {
         clearUsers,
         user: state.user,
         getUser,
+        getUserRepository,
+        repos: state.repos,
       }}
     >
       {children}

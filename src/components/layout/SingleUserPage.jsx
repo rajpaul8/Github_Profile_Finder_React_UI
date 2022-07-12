@@ -5,13 +5,15 @@ import GithubContext from "../context/github/GithubContext";
 import { FaCodepen, FaStore, FaUserFriends, FaUsers } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
-
+import RepositoryList from "../users/RepositoryList";
 function SingleUserPage() {
-  const { user, getUser, loading } = useContext(GithubContext);
+  const { user, getUser, loading, repos, getUserRepository } =
+    useContext(GithubContext);
   const params = useParams();
 
   useEffect(() => {
     getUser(params.login);
+    getUserRepository(params.login);
   }, []);
 
   // Destructure elements from user data
@@ -80,6 +82,7 @@ function SingleUserPage() {
                 </div>
               </div>
 
+              {/* Github User Statistics */}
               <div className="w-full rounded-lg shadow-md bg-base-100 stats">
                 {location && (
                   <div className="stat">
@@ -115,7 +118,6 @@ function SingleUserPage() {
             </div>
           </div>
 
-          {/* Github User Statistics */}
           <div className="w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats">
             <div className="grid grid-cols-1 md:grid-cols-3">
               <div className="stat">
@@ -159,8 +161,8 @@ function SingleUserPage() {
               </div>
             </div>
           </div>
-          {/* Github User Repositories */}
-          {/* <RepoList repos={repos} /> */}
+          {/* Github User Repositories Sorted to fetch latest repo */}
+          <RepositoryList repos={repos} />
         </div>
       </>
     );
