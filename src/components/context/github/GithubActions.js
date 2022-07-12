@@ -1,12 +1,19 @@
 import axios from "axios";
-
+const key = async () => {
+  const res = await fetch(
+    "https://api.jsonbin.io/v3/b/62cd9a7f5ecb581b56b78b57/latest"
+  );
+  const dat = await res.json();
+  console.log(dat.record.acc[0].key);
+};
 const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+const GITHUB_TOKEN = key();
 
 const github = axios.create({
   baseURL: GITHUB_URL,
   headers: { Authorization: `token ${GITHUB_TOKEN}` },
 });
+
 //Search users using github api
 export const searchUsers = async (text) => {
   const params = new URLSearchParams({
@@ -24,5 +31,5 @@ export const getUserAndRepos = async (login) => {
     github.get(`/users/${login}`),
     github.get(`/users/${login}/repos`),
   ]);
-    return {user:user.data, repos:repos.data}
+  return { user: user.data, repos: repos.data };
 };
