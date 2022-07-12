@@ -2,9 +2,10 @@ import { createContext, useReducer } from "react";
 import githubReducer from "./GithubReducer";
 
 const GithubContext = createContext();
-const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+
 export const GithubProvider = ({ children }) => {
+  const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
+  const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
   // Using useReducer to manage state now
   // const [users, setUsers] = useState([]);
   // const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +49,7 @@ export const GithubProvider = ({ children }) => {
       window.location = "./notfound";
     } else {
       const data = await response.json();
-      console.log(data);
+      console.log("passed:", data);
       dispatch({ type: "GET_USER", payload: data });
     }
   };
