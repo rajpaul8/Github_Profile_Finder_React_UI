@@ -4,7 +4,7 @@ const key = async () => {
     "https://api.jsonbin.io/v3/b/62cd9a7f5ecb581b56b78b57/latest"
   );
   const dat = await res.json();
-  console.log(dat.record.acc[0].key);
+  return dat.record.acc[0].key;
 };
 const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
 const GITHUB_TOKEN = key();
