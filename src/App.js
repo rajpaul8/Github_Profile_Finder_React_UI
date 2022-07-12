@@ -8,6 +8,7 @@ import NotFound from "./components/pages/NotFound";
 import { GithubProvider } from "./components/context/github/GithubContext";
 import { AlertProvider } from "./components/context/alert/AlertContext";
 import Alert from "./components/layout/Alert";
+import SingleUserPage from "./components/layout/SingleUserPage";
 function App() {
   return (
     <GithubProvider>
@@ -32,6 +33,14 @@ function App() {
                   element={
                     <>
                       <About />
+                    </>
+                  }
+                ></Route>
+                <Route
+                  path="/user/:login"
+                  element={
+                    <>
+                      <SingleUserPage />
                     </>
                   }
                 ></Route>
