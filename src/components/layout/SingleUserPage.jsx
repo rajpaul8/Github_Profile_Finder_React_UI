@@ -6,7 +6,8 @@ import { FaCodepen, FaStore, FaUserFriends, FaUsers } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
 import RepositoryList from "../users/RepositoryList";
-import { getUser, getUserRepository } from "../context/github/GithubActions";
+import { getUserAndRepos } from "../context/github/GithubActions";
+
 function SingleUserPage() {
   const { user, dispatch, loading, repos } = useContext(GithubContext);
   const params = useParams();
@@ -14,11 +15,8 @@ function SingleUserPage() {
   useEffect(() => {
     dispatch({ type: "SET_LOADING" });
     const getUserdata = async () => {
-      const data = await getUser(params.login);
-      dispatch({ type: "GET_USER", payload: data });
-
-      const repoData = await getUserRepository(params.login);
-      dispatch({ type: "GET_USER_REPOSITORY", payload: repoData });
+      const data = await getUserAndRepos(params.login);
+      dispatch({ type: "GET_USER_AND_REPOS", payload: data });
     };
     getUserdata();
     // eslint-disable-next-line react-hooks/exhaustive-deps
