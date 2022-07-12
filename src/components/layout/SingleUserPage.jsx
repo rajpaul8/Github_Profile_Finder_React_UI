@@ -6,14 +6,22 @@ import { FaCodepen, FaStore, FaUserFriends, FaUsers } from "react-icons/fa";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
 import RepositoryList from "../users/RepositoryList";
+import { getUser, getUserRepository } from "../context/github/GithubActions";
 function SingleUserPage() {
-  const { user, getUser, loading, repos, getUserRepository } =
-    useContext(GithubContext);
+  const { user, dispatch, loading, repos } = useContext(GithubContext);
   const params = useParams();
 
   useEffect(() => {
-    getUser(params.login);
-    getUserRepository(params.login);
+    dispatch({ type: "SET_LOADING" });
+    const getUserdata = async () => {
+      const data = await getUser(params.login);
+      dispatch({ type: "GET_USER", payload: data });
+
+      const repoData = await getUserRepository(params.login);
+      dispatch({ type: "GET_USER_REPOSITORY", payload: repoData });
+    };
+    getUserdata();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Destructure elements from user data
